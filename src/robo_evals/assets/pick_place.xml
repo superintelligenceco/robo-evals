@@ -1,0 +1,11 @@
+<!-- Pick and place: grasp a cube and bring it to a goal point above the table. -->
+<mujoco model="pick_place">
+  <include file="common.xml"/>
+  <worldbody>
+    <site name="goal" pos="0.1 0.1 0.12" size="0.03" material="goal"/>
+    <body name="cube" pos="0 0 0.02">
+      <freejoint name="cube"/>
+      <geom name="cube" type="box" size="0.02 0.02 0.02" mass="0.08" rgba="0.2 0.35 0.85 1"/>
+    </body>
+  </worldbody>
+</mujoco>

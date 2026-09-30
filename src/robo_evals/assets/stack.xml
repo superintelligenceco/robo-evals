@@ -1,0 +1,14 @@
+<!-- Stack: place the red cube on top of the blue cube and let go. -->
+<mujoco model="stack">
+  <include file="common.xml"/>
+  <worldbody>
+    <body name="cube" pos="0 0 0.02">
+      <freejoint name="cube"/>
+      <geom name="cube" type="box" size="0.02 0.02 0.02" mass="0.08" rgba="0.85 0.2 0.2 1"/>
+    </body>
+    <body name="base_cube" pos="0.1 0 0.02">
+      <freejoint name="base_cube"/>
+      <geom name="base_cube" type="box" size="0.02 0.02 0.02" mass="0.08" rgba="0.2 0.35 0.85 1"/>
+    </body>
+  </worldbody>
+</mujoco>

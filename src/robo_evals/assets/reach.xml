@@ -1,0 +1,7 @@
+<!-- Reach: move the grip point to a randomly placed target. -->
+<mujoco model="reach">
+  <include file="common.xml"/>
+  <worldbody>
+    <site name="goal" pos="0.1 0.1 0.15" size="0.03" material="goal"/>
+  </worldbody>
+</mujoco>
