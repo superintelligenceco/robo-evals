@@ -5,6 +5,10 @@
 [![CI](https://github.com/superintelligenceco/robo-evals/actions/workflows/ci.yml/badge.svg)](https://github.com/superintelligenceco/robo-evals/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)
+[![PyPI](https://img.shields.io/pypi/v/robo-evals.svg)](https://pypi.org/project/robo-evals/)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/superintelligenceco/robo-evals/badge)](https://scorecard.dev/viewer/?uri=github.com/superintelligenceco/robo-evals)
+[![Docs](https://img.shields.io/badge/docs-github%20pages-blue.svg)](https://superintelligenceco.github.io/robo-evals/)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/superintelligenceco/robo-evals)
 
 ![The scripted baseline solving reach, push, pick-and-place, drawer, and stack](docs/demo.gif)
 
@@ -16,6 +20,26 @@ base seed, so the same command gives the same numbers on any machine with the sa
 ## Install
 
 Pick one of these. Each gives you the `robo-evals` command.
+
+### PyPI
+
+```sh
+pip install "robo-evals[video]"
+```
+
+The `video` extra adds MP4 output. Add `ws` for WebSocket policy servers.
+
+### Standalone executable (Linux, macOS on Apple silicon)
+
+One file, no Python needed. The installer checks the download against the release's `SHA256SUMS`:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/superintelligenceco/robo-evals/main/install.sh | sh
+```
+
+Set `ROBO_EVALS_VERSION=v0.2.0` to pin a version and `ROBO_EVALS_INSTALL_DIR` to change the
+target directory (default `~/.local/bin`). Windows users can download `robo-evals-windows-x86_64.zip`
+from the [latest release](https://github.com/superintelligenceco/robo-evals/releases/latest).
 
 ### Container image (Linux amd64 and arm64)
 

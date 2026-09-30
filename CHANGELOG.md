@@ -7,14 +7,33 @@ called out, because they break comparisons with earlier numbers.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-30
+
+The first release you can install without cloning: PyPI, standalone executables, a container
+image, and a documentation site. Evaluation results are unchanged from 0.1.0.
+
 ### Added
 
+- `pip install robo-evals`: releases publish to PyPI on every `v*` tag.
+- Standalone executables for Linux (x86_64, arm64), macOS (arm64), and Windows (x86_64), built with
+  PyInstaller and attached to each GitHub Release, and `install.sh`, a `curl | sh` installer that
+  checks the download against `SHA256SUMS`.
 - A multi-arch (linux/amd64, linux/arm64) container image, `ghcr.io/superintelligenceco/robo-evals`,
   with OSMesa software rendering, so `docker run` writes reports and MP4 or GIF videos to a mounted
-  `/out` directory without a GPU or a display. Releases publish `:vX.Y.Z` and `:latest`, and manual
+  `/out` directory without a GPU or a display. The image runs as an unprivileged user, is scanned
+  with Trivy, and is signed with cosign. Releases publish `:vX.Y.Z` and `:latest`, and manual
   builds publish `:edge`.
-- The `Ship` workflow, which builds the wheel, sdist, and `SHA256SUMS`, smoke-tests the wheel and the
-  pushed image, and attaches the Python packages to each GitHub Release.
+- Supply-chain checks: an SPDX SBOM and build provenance attestations on every release, OpenSSF
+  Scorecard, dependency review on pull requests, and a Trivy scan.
+- A documentation site on GitHub Pages with an architecture diagram, an FAQ, and design decisions.
+- Property-based tests (Hypothesis) for the statistics, seeding, and randomization code, a test that
+  runs the README quickstart and Python API example, a benchmark gate on the evaluation loop, and a
+  weekly mutation-testing workflow.
+- A nightly workflow that tests against the latest dependencies on Python 3.11 to 3.13 and runs
+  the full `core` suite.
+- A Makefile, pre-commit configuration, dev container with a Codespaces button, VS Code settings,
+  `CITATION.cff`, `llms.txt`, a workflow linter, and a link checker.
+- A terminal recording of the real command line, `docs/cli-demo.gif`.
 
 ## [0.1.0] - 2026-09-30
 
@@ -49,5 +68,6 @@ two baselines, and a remote policy protocol.
 - `random`, `scripted`, and `zero` baseline policies.
 - `robo-evals list` to show tasks, suites, and randomization presets.
 
-[Unreleased]: https://github.com/superintelligenceco/robo-evals/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/superintelligenceco/robo-evals/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/superintelligenceco/robo-evals/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/superintelligenceco/robo-evals/releases/tag/v0.1.0

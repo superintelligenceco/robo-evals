@@ -76,15 +76,15 @@ To fix formatting and safe lint issues automatically, run `ruff format . && ruff
 
 ## Releases and artifacts
 
-One workflow ships the project. `ship.yml` runs when you push a `v*` tag, and on manual dispatch.
-It builds the wheel, sdist, and `SHA256SUMS`, and builds and pushes the multi-arch image to
-`ghcr.io/superintelligenceco/robo-evals`. It smoke-tests the wheel and the pushed image with a
-scripted run that writes a report and a video.
+One workflow ships the project. `release.yml` runs when you push a `v*` tag, and on manual dispatch.
+It builds the wheel and sdist, standalone executables for Linux (x86_64 and arm64), macOS (arm64),
+and Windows (x86_64), and the multi-arch image on `ghcr.io/superintelligenceco/robo-evals`. It
+smoke-tests each of them with a scripted run, scans the image with Trivy, and signs it with cosign.
 
-| Trigger | Image tags | Python packages |
-| --- | --- | --- |
-| Tag `v*` pushed | `:vX.Y.Z`, `:latest` | Attached to the GitHub Release, which the workflow creates if it doesn't exist |
-| `workflow_dispatch` | `:edge`, `:sha-<short sha>` | Workflow run artifact `python-dist` |
+| Trigger | PyPI | GitHub Release | Image tags |
+| --- | --- | --- | --- |
+| Tag `v*` pushed | Publishes `robo-evals` | Wheel, sdist, executables, SBOM, `SHA256SUMS`, with provenance attestations | `:vX.Y.Z`, `:latest` |
+| `workflow_dispatch` | Nothing | Nothing | `:edge`, `:sha-<short sha>` |
 
 To cut a release, move the `Unreleased` notes in `CHANGELOG.md` under the new version, bump the
 version in `pyproject.toml`, `src/robo_evals/__init__.py`, and `CITATION.cff`, then push an
@@ -95,8 +95,8 @@ git tag -a v0.2.0 -m "robo-evals 0.2.0"
 git push origin v0.2.0
 ```
 
-To build and test a snapshot from `main`, run
-`gh workflow run ship.yml -R superintelligenceco/robo-evals --ref main`.
+To dry-run the release from `main` without publishing, run
+`gh workflow run release.yml -R superintelligenceco/robo-evals --ref main`.
 
 To build the image locally and run it:
 
