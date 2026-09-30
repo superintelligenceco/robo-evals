@@ -1,0 +1,80 @@
+<!--
+  Shared scene: table, lights, cameras, and a floating two-finger gripper.
+
+  The gripper moves along three world-frame slide joints (x, y, z) driven by
+  position actuators and is gravity compensated. Two fingers slide along the
+  y axis and close symmetrically. The world-frame position of the "grip"
+  site is the end-effector position that tasks report and control.
+-->
+<mujoco>
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.002" cone="elliptic" impratio="10" integrator="implicitfast"/>
+  <size memory="8M"/>
+
+  <visual>
+    <global offwidth="640" offheight="480"/>
+    <headlight ambient="0.35 0.35 0.35" diffuse="0.5 0.5 0.5" specular="0.1 0.1 0.1"/>
+    <quality shadowsize="2048"/>
+  </visual>
+
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.82 0.82 0.80" rgb2="0.74 0.74 0.72"
+             width="256" height="256"/>
+    <texture name="sky" type="skybox" builtin="gradient" rgb1="0.55 0.62 0.72" rgb2="0.12 0.14 0.18"
+             width="256" height="256"/>
+    <material name="table" texture="grid" texrepeat="6 6" reflectance="0.05"/>
+    <material name="gripper" rgba="0.25 0.27 0.30 1"/>
+    <material name="pad" rgba="0.12 0.12 0.12 1"/>
+    <material name="goal" rgba="0.15 0.75 0.25 0.35"/>
+  </asset>
+
+  <default>
+    <geom friction="1.0 0.005 0.0001" solref="0.01 1" solimp="0.95 0.99 0.001"/>
+    <default class="visual">
+      <geom contype="0" conaffinity="0" group="1"/>
+    </default>
+  </default>
+
+  <worldbody>
+    <light name="key" pos="0.4 -0.4 1.2" dir="-0.3 0.3 -1" diffuse="0.6 0.6 0.6" castshadow="true"/>
+    <light name="fill" pos="-0.5 0.3 1.0" dir="0.4 -0.2 -1" diffuse="0.25 0.25 0.25" castshadow="false"/>
+    <geom name="table" type="box" size="0.45 0.45 0.02" pos="0 0 -0.02" material="table"/>
+    <camera name="front" pos="0.0 -0.62 0.5" xyaxes="1 0 0 0 0.587 0.81" fovy="42"/>
+    <camera name="top" pos="0 0 1.1" xyaxes="1 0 0 0 1 0" fovy="45"/>
+
+    <body name="ee" pos="0 0 0" gravcomp="1">
+      <joint name="ee_x" type="slide" axis="1 0 0" range="-0.35 0.35" damping="40"/>
+      <joint name="ee_y" type="slide" axis="0 1 0" range="-0.35 0.35" damping="40"/>
+      <joint name="ee_z" type="slide" axis="0 0 1" range="0.0 0.45" damping="40"/>
+      <inertial pos="0 0 0.06" mass="0.4" diaginertia="0.001 0.001 0.001"/>
+      <geom name="palm" type="box" size="0.015 0.06 0.01" pos="0 0 0.06" material="gripper"/>
+      <geom name="wrist" type="cylinder" size="0.015 0.05" pos="0 0 0.12" material="gripper"
+            class="visual"/>
+      <site name="grip" pos="0 0 0" size="0.006" rgba="1 0.3 0.1 0.6"/>
+      <body name="finger_l" pos="0 0 0" gravcomp="1">
+        <joint name="finger_l" type="slide" axis="0 1 0" range="0 0.045" damping="5"/>
+        <inertial pos="0 0.005 0.02" mass="0.05" diaginertia="1e-5 1e-5 1e-5"/>
+        <geom name="finger_l" type="box" size="0.012 0.005 0.04" pos="0 0.005 0.02"
+              material="pad" friction="1.5 0.01 0.001"/>
+      </body>
+      <body name="finger_r" pos="0 0 0" gravcomp="1">
+        <joint name="finger_r" type="slide" axis="0 -1 0" range="0 0.045" damping="5"/>
+        <inertial pos="0 -0.005 0.02" mass="0.05" diaginertia="1e-5 1e-5 1e-5"/>
+        <geom name="finger_r" type="box" size="0.012 0.005 0.04" pos="0 -0.005 0.02"
+              material="pad" friction="1.5 0.01 0.001"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <contact>
+    <exclude body1="finger_l" body2="finger_r"/>
+  </contact>
+
+  <actuator>
+    <position name="ee_x" joint="ee_x" kp="600" ctrlrange="-0.35 0.35" forcerange="-40 40"/>
+    <position name="ee_y" joint="ee_y" kp="600" ctrlrange="-0.35 0.35" forcerange="-40 40"/>
+    <position name="ee_z" joint="ee_z" kp="600" ctrlrange="0.0 0.45" forcerange="-40 40"/>
+    <position name="finger_l" joint="finger_l" kp="300" ctrlrange="0 0.045" forcerange="-15 15"/>
+    <position name="finger_r" joint="finger_r" kp="300" ctrlrange="0 0.045" forcerange="-15 15"/>
+  </actuator>
+</mujoco>
