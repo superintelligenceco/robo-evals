@@ -1,6 +1,6 @@
 """Reproducible evaluation harness for robot manipulation policies in MuJoCo."""
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 from robo_evals.video import configure_gl_backend
 

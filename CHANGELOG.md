@@ -7,6 +7,13 @@ called out, because they break comparisons with earlier numbers.
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-09-30
+
+### Fixed
+
+- The release workflow creates the GitHub Release before it publishes to PyPI, so a PyPI outage
+  or rate limit no longer blocks the release assets. PyPI uploads skip files that already exist.
+
 ## [0.2.0] - 2026-09-30
 
 The first release you can install without cloning: PyPI, standalone executables, a container
@@ -68,6 +75,7 @@ two baselines, and a remote policy protocol.
 - `random`, `scripted`, and `zero` baseline policies.
 - `robo-evals list` to show tasks, suites, and randomization presets.
 
-[Unreleased]: https://github.com/superintelligenceco/robo-evals/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/superintelligenceco/robo-evals/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/superintelligenceco/robo-evals/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/superintelligenceco/robo-evals/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/superintelligenceco/robo-evals/releases/tag/v0.1.0

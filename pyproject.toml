@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "robo-evals"
-version = "0.2.0"
+version = "0.2.1"
 description = "Reproducible evaluation harness for robot manipulation policies in MuJoCo simulation."
 readme = "README.md"
 license = "Apache-2.0"
