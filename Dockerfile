@@ -34,6 +34,10 @@ ENV MUJOCO_GL=osmesa \
     HOME=/tmp
 
 # Mount a host directory at /out. By default, reports land in /out/results/<policy>/.
+# The image runs as an unprivileged user; pass --user "$(id -u):$(id -g)" so files
+# written to a mounted directory belong to you.
+RUN mkdir -p /out && chmod 777 /out
 WORKDIR /out
+USER 65532:65532
 ENTRYPOINT ["robo-evals"]
 CMD ["--help"]
