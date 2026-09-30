@@ -7,6 +7,15 @@ called out, because they break comparisons with earlier numbers.
 
 ## [Unreleased]
 
+### Added
+
+- A multi-arch (linux/amd64, linux/arm64) container image, `ghcr.io/superintelligenceco/robo-evals`,
+  with OSMesa software rendering, so `docker run` writes reports and MP4 or GIF videos to a mounted
+  `/out` directory without a GPU or a display. Releases publish `:vX.Y.Z` and `:latest`, and manual
+  builds publish `:edge`.
+- The `Ship` workflow, which builds the wheel, sdist, and `SHA256SUMS`, smoke-tests the wheel and the
+  pushed image, and attaches the Python packages to each GitHub Release.
+
 ## [0.1.0] - 2026-09-30
 
 The first release: a seeded evaluation harness for manipulation policies in MuJoCo, five tasks,

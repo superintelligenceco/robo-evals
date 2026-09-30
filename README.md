@@ -13,10 +13,63 @@ task suite, and get back per-task success rates with Wilson confidence intervals
 Markdown report, and MP4 or GIF videos of the episodes you ask for. Every scene is derived from a
 base seed, so the same command gives the same numbers on any machine with the same MuJoCo build.
 
-## Quickstart
+## Install
+
+Pick one of these. Each gives you the `robo-evals` command.
+
+### Container image (Linux amd64 and arm64)
+
+The image renders offscreen with OSMesa, so videos work on any host without a GPU or a display.
+Mount a directory at `/out`, and the reports and videos land in it:
+
+```sh
+mkdir -p out
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/out:/out" \
+  ghcr.io/superintelligenceco/robo-evals:latest \
+  run --policy scripted --suite smoke --episodes 5 --video first --video-format mp4
+# out/results/scripted/report.md, report.json, videos/reach_ep000.mp4, videos/push_ep000.mp4
+```
+
+Tags: `:vX.Y.Z` and `:latest` for releases, `:edge` for the latest build from `main`. The image is
+private while the repository is private, so log in first with
+`echo "$GITHUB_TOKEN" | docker login ghcr.io -u <your-github-user> --password-stdin`, using a
+token with the `read:packages` scope.
+
+To evaluate your own policy file, mount it and pass its path. This example runs
+[`examples/my_policy.py`](examples/my_policy.py):
+
+```sh
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/out:/out" -v "$PWD/examples:/policies:ro" \
+  ghcr.io/superintelligenceco/robo-evals:latest \
+  run --policy /policies/my_policy.py:ReachPolicy --tasks reach --episodes 5
+```
+
+To evaluate a policy server on the host, add `--network host` and pass
+`--policy http://127.0.0.1:<port>`.
+
+### Wheel from the latest release
+
+```sh
+pip install "robo-evals[video] @ https://github.com/superintelligenceco/robo-evals/releases/latest/download/robo_evals-<version>-py3-none-any.whl"
+```
+
+Replace `<version>` with the release version, for example `0.2.0`. Each release also carries the
+sdist (`robo_evals-<version>.tar.gz`) and a `SHA256SUMS` file. While the repository is private,
+download the file with `gh release download -R superintelligenceco/robo-evals -p '*.whl'` and
+install it with `pip install "./robo_evals-<version>-py3-none-any.whl[video]"`.
+
+### From source
 
 ```sh
 pip install "robo-evals[video] @ git+https://github.com/superintelligenceco/robo-evals"
+```
+
+On headless Linux outside the container, install EGL or OSMesa for videos (see
+[Rendering and video](#rendering-and-video)).
+
+## Quickstart
+
+```sh
 robo-evals run --policy scripted --suite core --episodes 20 --video first
 robo-evals run --policy path/to/my_policy.py:MyPolicy --suite core --episodes 20
 ```
@@ -166,7 +219,8 @@ Videos and image observations need an OpenGL context. On Linux without a display
 warning, disables rendering, skips videos, and still scores every episode. The report states that
 videos were unavailable. Image observations are the exception: they fail loudly, because a vision
 policy can't run without them. MP4 output needs `imageio-ffmpeg` (the `video` extra); without it,
-robo-evals writes GIFs.
+robo-evals writes GIFs. The container image sets `MUJOCO_GL=osmesa` and ships OSMesa and
+`imageio-ffmpeg`, so both formats work there out of the box.
 
 ## Python API
 
