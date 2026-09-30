@@ -12,6 +12,8 @@ exclude = [
   '^ws://',
   # A release asset that exists only after a tag is pushed.
   '/releases/latest/download/',
+  # Changelog compare links point at a tag that exists only after the release is cut.
+  '/compare/v',
   # The badge for a workflow renders only after its first run.
   'actions/workflows/.*badge\.svg',
 ]
