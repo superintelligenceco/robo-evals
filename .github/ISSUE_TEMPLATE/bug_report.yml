@@ -1,0 +1,55 @@
+name: Bug report
+description: Report something robo-evals does wrong, such as a crash, a nondeterministic result, or a wrong success predicate.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. To report a security vulnerability, don't open an issue. Follow [SECURITY.md](https://github.com/superintelligenceco/robo-evals/blob/main/SECURITY.md) instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Describe what you saw and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include the exact command, the seed, and the task. A run with a built-in policy (`random` or `scripted`) is easiest to reproduce.
+      placeholder: |
+        robo-evals run --policy scripted --tasks stack --episodes 20 --seed 0
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Paste the terminal output or the relevant part of `report.json`.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: robo-evals version
+      description: Output of `robo-evals --version`.
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Python version, MuJoCo version, and OS
+      placeholder: Python 3.12.4, MuJoCo 3.3.0, Ubuntu 24.04 x86_64
+    validations:
+      required: true
+  - type: dropdown
+    id: rendering
+    attributes:
+      label: Rendering backend (MUJOCO_GL)
+      options:
+        - egl
+        - osmesa
+        - glfw
+        - default (macOS)
+        - not related to rendering

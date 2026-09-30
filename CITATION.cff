@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+title: "robo-evals: reproducible evaluation for robot manipulation policies"
+type: software
+authors:
+  - name: "superintelligenceco contributors"
+repository-code: "https://github.com/superintelligenceco/robo-evals"
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-09-30"
+keywords:
+  - robotics
+  - evaluation
+  - mujoco
+  - manipulation
+  - benchmark

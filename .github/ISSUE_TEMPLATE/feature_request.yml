@@ -1,0 +1,34 @@
+name: Feature request
+description: Suggest a task, a metric, a backend, or a CLI option.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What do you want to measure about your policy that robo-evals can't measure today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the behavior you want. For a new task, include the success predicate and what the scene randomizes.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - tasks and scenes
+        - domain randomization
+        - policy interface or remote protocol
+        - metrics and reports
+        - video and rendering
+        - simulator backends
+        - other
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
