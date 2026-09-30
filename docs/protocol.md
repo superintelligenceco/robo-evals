@@ -47,7 +47,7 @@ On failure, reply `{"type": "error", "message": str}`.
 
 The fastest path is `robo-evals serve --policy module:attr [--protocol ws]`, which wraps any
 Python policy. If your model needs its own environment, copy
-[`examples/policy_server.py`](../examples/policy_server.py), which uses only the standard library,
+[`examples/policy_server.py`](https://github.com/superintelligenceco/robo-evals/blob/main/examples/policy_server.py), which uses only the standard library,
 and replace its `act` function with your model's forward pass. A typical adapter for a
 vision-language-action model:
 

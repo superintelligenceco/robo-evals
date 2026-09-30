@@ -1,0 +1,47 @@
+site_name: robo-evals
+site_description: Reproducible evaluation harness for robot manipulation policies in MuJoCo simulation.
+site_url: https://superintelligenceco.github.io/robo-evals/
+repo_url: https://github.com/superintelligenceco/robo-evals
+repo_name: superintelligenceco/robo-evals
+edit_uri: edit/main/docs/
+strict: true
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Remote policy protocol: protocol.md
+  - FAQ: faq.md
+  - Decisions:
+      - adr/index.md
+      - "0001 Derive episode seeds by hashing": adr/0001-hash-derived-episode-seeds.md
+      - "0002 Score with Wilson intervals": adr/0002-wilson-score-intervals.md
+      - "0003 Keep policies out of process": adr/0003-remote-policy-protocol.md
