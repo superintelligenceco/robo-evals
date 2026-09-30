@@ -1,0 +1,17 @@
+# Link checker settings. Exclusions are for links that are not meant to resolve.
+max_retries = 3
+retry_wait_time = 5
+timeout = 30
+accept = ["200..=299", "429"]
+exclude = [
+  # The docs site is published by the Docs workflow after this check runs on a new repository.
+  '^https://superintelligenceco\.github\.io/robo-evals',
+  # Placeholder addresses used in examples.
+  '^https?://127\.0\.0\.1',
+  '^https?://localhost',
+  '^ws://',
+  # A release asset that exists only after a tag is pushed.
+  '/releases/latest/download/',
+  # The badge for a workflow renders only after its first run.
+  'actions/workflows/.*badge\.svg',
+]

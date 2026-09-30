@@ -1,0 +1,33 @@
+name: Mutation testing
+
+# Mutates the statistics, seeding, randomization, and report code, then checks
+# that the fast tests catch the changes. Slow on a busy repository, so it runs
+# weekly rather than on every push.
+
+on:
+  schedule:
+    - cron: "23 4 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mutmut:
+    name: mutmut
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]" mutmut
+      - name: Run mutants
+        run: mutmut run --max-children 2
+      - name: Apply the score gate
+        run: mutmut results --all true | python scripts/mutation_gate.py | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: List surviving mutants
+        if: always()
+        run: mutmut results | tee -a "$GITHUB_STEP_SUMMARY"
