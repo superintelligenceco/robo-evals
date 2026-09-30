@@ -2,10 +2,17 @@
 
 from __future__ import annotations
 
+import os
+
 import pytest
+from hypothesis import settings
 
 import robo_evals  # noqa: F401  (configures the GL backend before mujoco loads)
 from robo_evals.video import try_make_renderer
+
+# The nightly workflow sets HYPOTHESIS_PROFILE=nightly to search far more examples.
+settings.register_profile("nightly", max_examples=1000, deadline=None)
+settings.load_profile(os.environ.get("HYPOTHESIS_PROFILE", "default"))
 
 
 @pytest.fixture(scope="session")
