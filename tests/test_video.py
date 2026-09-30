@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import os
+import subprocess
+import sys
 from pathlib import Path
 
 import numpy as np
@@ -93,3 +96,17 @@ def test_scoring_continues_without_renderer(
     with pytest.raises(RuntimeError, match="image observations"):
         evaluate(load_policy("zero"), tasks=["reach"], episodes=1, image_obs=True)
 
+
+def test_broken_gl_backend_degrades_in_a_fresh_process(tmp_path: Path) -> None:
+    code = (
+        "from robo_evals import evaluate, load_policy\n"
+        f"r = evaluate(load_policy('scripted'), tasks=['reach'], episodes=2, video='all',"
+        f" video_dir={str(tmp_path)!r})\n"
+        "print(r.video_available, r.tasks[0].successes)\n"
+    )
+    env = {**os.environ, "MUJOCO_GL": "not-a-backend"}
+    out = subprocess.run(
+        [sys.executable, "-c", code], env=env, capture_output=True, text=True, check=True
+    )
+    assert out.stdout.strip() == "False 2"
+    assert "rendering is disabled" in out.stderr

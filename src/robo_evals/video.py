@@ -24,14 +24,37 @@ VIDEO_FORMATS = ("gif", "mp4")
 
 
 def configure_gl_backend() -> None:
-    """Picks a headless GL backend on Linux when the caller has not chosen one.
+    """Picks a headless GL backend on Linux and imports ``mujoco`` safely.
 
-    This must run before ``mujoco`` creates its first rendering context.
+    This must run before ``mujoco`` is first imported, because MuJoCo reads
+    ``MUJOCO_GL`` at import time. If the chosen backend is broken (for example
+    ``MUJOCO_GL=osmesa`` without the OSMesa library), importing ``mujoco``
+    raises. In that case rendering is disabled so that physics and scoring
+    still work and videos are skipped.
     """
     if sys.platform.startswith("linux") and not os.environ.get("DISPLAY"):
         os.environ.setdefault("MUJOCO_GL", "egl")
         if os.environ.get("MUJOCO_GL") == "egl":
             os.environ.setdefault("PYOPENGL_PLATFORM", "egl")
+    if "mujoco" in sys.modules:
+        return
+    try:
+        import mujoco
+    except ImportError:
+        raise
+    except Exception as exc:  # A broken GL backend fails with many exception types.
+        logger.warning(
+            "MUJOCO_GL=%s failed to load (%s: %s); rendering is disabled.",
+            os.environ.get("MUJOCO_GL"),
+            type(exc).__name__,
+            exc,
+        )
+        for name in list(sys.modules):
+            if name.split(".")[0] in ("mujoco", "OpenGL"):
+                del sys.modules[name]
+        os.environ["MUJOCO_GL"] = "disable"
+        os.environ.pop("PYOPENGL_PLATFORM", None)
+        import mujoco  # noqa: F401
 
 
 def try_make_renderer(model: Any, width: int, height: int) -> Any | None:
