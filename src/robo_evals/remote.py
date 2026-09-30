@@ -122,7 +122,9 @@ class WebSocketPolicy:
                 "WebSocket policies need the 'websockets' package: pip install 'robo-evals[ws]'"
             ) from exc
         self.timeout = timeout
-        self._ws = ws_connect(url, open_timeout=timeout, max_size=None)
+        # Enter the connection's context explicitly; newer websockets releases
+        # deprecate using a sync connection outside of one.
+        self._ws = ws_connect(url, open_timeout=timeout, max_size=None).__enter__()
 
     def _call(self, message: Mapping[str, Any]) -> dict[str, Any]:
         self._ws.send(json.dumps(message))
@@ -141,7 +143,7 @@ class WebSocketPolicy:
         return _parse_action(self._call({"type": "act", "observation": encode(obs)}))
 
     def close(self) -> None:
-        self._ws.close()
+        self._ws.__exit__(None, None, None)
 
 
 def connect(url: str, timeout: float = 30.0) -> HTTPPolicy | WebSocketPolicy:
