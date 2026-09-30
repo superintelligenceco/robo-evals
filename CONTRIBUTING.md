@@ -69,29 +69,31 @@ To fix formatting and safe lint issues automatically, run `ruff format . && ruff
 ## Commits and pull requests
 
 - Use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages and PR
-  titles, for example `feat(tasks): add a peg insertion task`. The release workflow builds the
-  changelog from them.
+  titles, for example `feat(tasks): add a peg insertion task`.
 - Keep each pull request focused on one change.
 - Update `CHANGELOG.md` under `Unreleased` when behavior changes. Changes that move success rates
   for a fixed seed are breaking for anyone comparing numbers, so call them out.
 
 ## Releases and artifacts
 
-Two workflows ship the project:
-
-- `release.yml` runs release-please on every push to `main`. It keeps a release pull request open
-  with the next version and changelog. When you merge that pull request, release-please creates
-  the tag and the GitHub Release, and then calls `ship.yml` for that tag in the same run. It calls
-  the workflow directly because tags created with `GITHUB_TOKEN` don't trigger other workflows.
-- `ship.yml` builds the wheel, sdist, and `SHA256SUMS`, and builds and pushes the multi-arch image
-  to `ghcr.io/superintelligenceco/robo-evals`. It smoke-tests the wheel and the pushed image with a
-  scripted run that writes a report and a video.
+One workflow ships the project. `ship.yml` runs when you push a `v*` tag, and on manual dispatch.
+It builds the wheel, sdist, and `SHA256SUMS`, and builds and pushes the multi-arch image to
+`ghcr.io/superintelligenceco/robo-evals`. It smoke-tests the wheel and the pushed image with a
+scripted run that writes a report and a video.
 
 | Trigger | Image tags | Python packages |
 | --- | --- | --- |
-| Release created by release-please | `:vX.Y.Z`, `:latest` | Attached to the release |
-| Tag `v*` pushed by hand | `:vX.Y.Z`, `:latest` | Attached to the release, which the workflow creates if it doesn't exist |
+| Tag `v*` pushed | `:vX.Y.Z`, `:latest` | Attached to the GitHub Release, which the workflow creates if it doesn't exist |
 | `workflow_dispatch` | `:edge`, `:sha-<short sha>` | Workflow run artifact `python-dist` |
+
+To cut a release, move the `Unreleased` notes in `CHANGELOG.md` under the new version, bump the
+version in `pyproject.toml`, `src/robo_evals/__init__.py`, and `CITATION.cff`, then push an
+annotated tag:
+
+```sh
+git tag -a v0.2.0 -m "robo-evals 0.2.0"
+git push origin v0.2.0
+```
 
 To build and test a snapshot from `main`, run
 `gh workflow run ship.yml -R superintelligenceco/robo-evals --ref main`.

@@ -4,31 +4,24 @@ name: Ship
 # - the wheel and sdist (workflow artifacts, and release assets for a tag)
 # - a multi-arch (linux/amd64, linux/arm64) image on ghcr.io
 #
-# A pushed v* tag or a call from the Release workflow (when release-please
-# creates a release) tags the image :vX.Y.Z and :latest and attaches the
-# wheel, sdist, and SHA256SUMS to the GitHub Release. A manual dispatch pushes
-# :edge and keeps the Python packages as workflow run artifacts only.
+# A pushed v* tag tags the image :vX.Y.Z and :latest and attaches the wheel,
+# sdist, and SHA256SUMS to the GitHub Release. A manual dispatch pushes :edge
+# and keeps the Python packages as workflow run artifacts only.
 
 on:
   push:
     tags: ["v*"]
   workflow_dispatch:
-  workflow_call:
-    inputs:
-      tag:
-        description: Release tag to build and attach assets to, for example v0.2.0
-        required: true
-        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: ship-${{ inputs.tag || github.ref }}
+  group: ship-${{ github.ref }}
   cancel-in-progress: false
 
 env:
-  RELEASE_TAG: ${{ inputs.tag || (github.ref_type == 'tag' && github.ref_name) || '' }}
+  RELEASE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
   IMAGE: ghcr.io/${{ github.repository }}
 
 jobs:
@@ -38,7 +31,6 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.tag || github.ref }}
           persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -83,7 +75,6 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.tag || github.ref }}
           persist-credentials: false
       - name: Compute tags
         id: tags
@@ -131,7 +122,7 @@ jobs:
 
   release-assets:
     name: Attach assets to the release
-    if: ${{ inputs.tag != '' || github.ref_type == 'tag' }}
+    if: github.ref_type == 'tag'
     needs: [dist, image]
     runs-on: ubuntu-latest
     permissions:
