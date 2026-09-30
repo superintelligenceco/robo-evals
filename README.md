@@ -30,10 +30,7 @@ docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/out:/out" \
 # out/results/scripted/report.md, report.json, videos/reach_ep000.mp4, videos/push_ep000.mp4
 ```
 
-Tags: `:vX.Y.Z` and `:latest` for releases, `:edge` for the latest build from `main`. The image is
-private while the repository is private, so log in first with
-`echo "$GITHUB_TOKEN" | docker login ghcr.io -u <your-github-user> --password-stdin`, using a
-token with the `read:packages` scope.
+Tags: `:vX.Y.Z` and `:latest` for releases, `:edge` for a manual build from `main`.
 
 To evaluate your own policy file, mount it and pass its path. This example runs
 [`examples/my_policy.py`](examples/my_policy.py):
@@ -54,9 +51,7 @@ pip install "robo-evals[video] @ https://github.com/superintelligenceco/robo-eva
 ```
 
 Replace `<version>` with the release version, for example `0.2.0`. Each release also carries the
-sdist (`robo_evals-<version>.tar.gz`) and a `SHA256SUMS` file. While the repository is private,
-download the file with `gh release download -R superintelligenceco/robo-evals -p '*.whl'` and
-install it with `pip install "./robo_evals-<version>-py3-none-any.whl[video]"`.
+sdist (`robo_evals-<version>.tar.gz`) and a `SHA256SUMS` file.
 
 ### From source
 
