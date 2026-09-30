@@ -1,0 +1,30 @@
+# robo-evals
+
+> Seeded, reproducible success rates for robot manipulation policies in MuJoCo simulation, with Wilson confidence intervals, JSON and Markdown reports, and episode videos. Python 3.11+, Apache-2.0. Install with `pip install robo-evals`, the standalone executable from the GitHub Release (`install.sh`), or the `ghcr.io/superintelligenceco/robo-evals` container image.
+
+Key facts:
+
+- CLI: `robo-evals run --policy <spec> --suite core --episodes N [--video first|failures|all]`, `robo-evals list`, `robo-evals compare a.json b.json`, `robo-evals serve --policy <spec>`.
+- A policy is any callable from an observation dict to an action `[dx, dy, dz, grip]` in `[-1, 1]`, with an optional `reset(task, seed)` method. `--policy` accepts `random`, `scripted`, `zero`, `module:attr`, `file.py:attr`, or an `http://` or `ws://` URL.
+- Tasks: `reach`, `push`, `pick_place`, `drawer`, `stack`. Suites: `core` (all five), `smoke` (reach, push).
+- Each episode seed derives from the base seed, task name, and episode index, so the same command gives the same numbers for a fixed robo-evals and MuJoCo version and platform.
+- Reports go to `results/<policy>/report.json` (schema `robo-evals/report/1`), `report.md`, and `videos/`.
+- Headless Linux needs EGL or OSMesa for videos; without a GL backend, runs still score every episode and skip videos.
+
+## Docs
+
+- [README](https://github.com/superintelligenceco/robo-evals/blob/main/README.md): install, quickstart, task catalog, policy interface, metrics
+- [Documentation site](https://superintelligenceco.github.io/robo-evals/): architecture, FAQ, design decisions
+- [Remote policy protocol](https://github.com/superintelligenceco/robo-evals/blob/main/docs/protocol.md): the `robo-evals/1` HTTP and WebSocket message format
+- [Changelog](https://github.com/superintelligenceco/robo-evals/blob/main/CHANGELOG.md)
+
+## Examples
+
+- [examples/my_policy.py](https://github.com/superintelligenceco/robo-evals/blob/main/examples/my_policy.py): a minimal in-process policy
+- [examples/policy_server.py](https://github.com/superintelligenceco/robo-evals/blob/main/examples/policy_server.py): a dependency-free remote policy server
+- [examples/python_api.py](https://github.com/superintelligenceco/robo-evals/blob/main/examples/python_api.py): calling `evaluate()` from Python
+
+## Optional
+
+- [CONTRIBUTING.md](https://github.com/superintelligenceco/robo-evals/blob/main/CONTRIBUTING.md): development setup and how to add a task
+- [AGENTS.md](https://github.com/superintelligenceco/robo-evals/blob/main/AGENTS.md): commands and conventions for coding agents

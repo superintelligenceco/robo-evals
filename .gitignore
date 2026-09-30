@@ -6,6 +6,11 @@ __pycache__/
 venv/
 build/
 dist/
+dist-bin/
+site/
+mutants/
+.hypothesis/
+.benchmarks/
 
 # Tooling caches
 .pytest_cache/
@@ -26,5 +31,7 @@ node_modules/
 
 # Editors and OS
 .idea/
-.vscode/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
 .DS_Store
