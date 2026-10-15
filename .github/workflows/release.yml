@@ -66,7 +66,7 @@ jobs:
             --video first --video-format mp4 --out smoke
           test -s smoke/scripted/report.json
           test -s smoke/scripted/videos/reach_ep000.mp4
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: python-dist
           path: dist/
@@ -111,7 +111,7 @@ jobs:
           "$exe" run --policy scripted --suite smoke --episodes 3 --out exe-out
           test -s exe-out/scripted/report.json
           python -c "import json; r = json.load(open('exe-out/scripted/report.json')); assert r['overall']['success_rate'] == 1.0, r['overall']"
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: binary-${{ matrix.name }}
           path: dist-bin/*
